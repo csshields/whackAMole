@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Whack a Mole</title>
+	<script  src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script  src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet">
+	<script type="text/javascript">
+
+		var mole = {
+			score:0,
+			peekDuraction:1000,
+			numOfPossibleMoles:3,
+			startRound: function(){
+				//pick number of moles
+				var numMoles = _.random(1, this.numOfPossibleMoles);
+				
+				//pick which holes
+				var maxHolesAvailable = $('#gopherHoles li').length;
+				var holes = [];
+				for (i = 1; i <= numMoles; i++) { 
+					holes.push( _.random(1, maxHolesAvailable) );
+				}
+
+				//show moles
+				this.peek( _.uniq( holes ) );
+
+				//Next
+				setTimeout(function(){ 
+					mole.hideAll();
+					mole.startRound(); 
+				}, this.peekDuraction );
+			},
+			peek: function( holes ){
+				console.log(holes)
+				for (i = 0; i < holes.length; i++) { 
+					var $hole = $( "#gopherHoles li" ).eq( holes[i] - 1 );
+					$hole.addClass('peek');
+				}
+			},
+			hide:function( $el ){
+				$el.removeClass('peek')
+			},
+			hideAll: function(){
+				$('#gopherHoles li').removeClass('peek');
+			},
+			clickedHole: function(e){
+				var $clickedHole = $(e.currentTarget);
+				if( $clickedHole.hasClass('peek') ){
+					this.updateScore();
+					this.hide( $clickedHole );
+				}
+			},
+			updateScore: function(){
+				++this.score;
+				$("#score span").text( this.score );
+			}
+		}
+
+		$(function() {
+		    $("#gopherHoles li").click(function(e) {
+		      	mole.clickedHole(e);
+		    });
+		    mole.startRound();
+		});
+
+	</script>
+	<style>
+		body, html { padding:0; margin:0; background-color:#efefef; width:100%; font-family: 'Oswald', sans-serif; font-size:16px;}
+		#contentWrapper{width:100%; text-align: center;}
+		#content{width:80%; margin: 0 auto; background-color:#fff; margin-top: 10px; padding-top:40px; position:relative;}
+		#score{position: absolute; right:0; top:0; padding-right:20px;}
+		h1{padding-bottom:30px; font-size:4em}
+		#gopherHoles{list-style-type: none; margin: 0; padding: 0; box-sizing: border-box;}
+		#gopherHoles li{ width:25%; height:150px; float:left; margin:0; padding:0; box-sizing: border-box; }
+		.clearfix:after {content: "."; visibility: hidden; display: block; height: 0; clear: both;}
+		li div {
+			width: 200px;
+			height: 100px;
+			background: #36261B;
+			-moz-border-radius: 100px / 50px;
+			-webkit-border-radius: 100px / 50px;
+			border-radius: 100px / 50px;
+			display: inline-block;	
+		}
+		li.peek div{background-image: url('https://lh3.ggpht.com/HhQVHSiOobcjNWrWTRFVDtbZ9N1wXqh_Fm5M_l_1Xqr1YLlw_ZCjAdlf1IzZR0WqsB8v=w170');
+			background-size: 80px 60px; background-repeat: no-repeat; background-position: center; }
+
+	</style>
+</head>
+
+<body>
+  
+  <div id="contentWrapper">
+  	<div id="content">
+  		<h1>Whack a Mole</h1>
+  		<h2 id="score">Score: <span>0</span></h2>
+  		<ul id="gopherHoles" class="clearfix">
+  			<li class="peek"><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+  			<li><div></div></li>
+			<li><div></div></li>
+			<li><div></div></li>
+
+  		</div>
+  	</div>
+  </div>
+</body>
+
+</html>
